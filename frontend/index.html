@@ -107,14 +107,12 @@
   const roleButtons = document.querySelectorAll(".role-btn");
   const loginBtn = document.getElementById("loginBtn");
 
-  // Role Selection
   roleButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       selectedRole = btn.id.split("-")[1];
 
       roleButtons.forEach(b =>
         b.classList.remove("border-green-500","bg-blue-50","text-blue-600")
-        
       );
 
       btn.classList.add("border-green-500","bg-blue-50","text-blue-600");
@@ -126,12 +124,9 @@
         idLabel.textContent = "Roll Number";
         loginId.placeholder = "Enter Roll Number";
       }
-    }
-    );
+    });
   });
 
-
-  // Login
   loginBtn.addEventListener("click", async () => {
 
     const username = loginId.value.trim();
@@ -143,21 +138,19 @@
     }
 
     const isStudent = selectedRole === "student";
- const API = window.location.origin;
+    const API = window.location.origin;
+
     try {
-      const res = await fetch(
-       
-       fetch(`${API}/api/auth/${selectedRole}/login`),
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(
-            isStudent
-              ? { rollNo: username, password: pass }
-              : { employeeId: username, password: pass }
-          )
-        }
-      );
+
+      const res = await fetch(`${API}/api/auth/${selectedRole}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+          isStudent
+            ? { rollNo: username, password: pass }
+            : { employeeId: username, password: pass }
+        )
+      });
 
       const data = await res.json();
 
