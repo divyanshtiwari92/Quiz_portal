@@ -107,8 +107,17 @@
   const roleButtons = document.querySelectorAll(".role-btn");
   const loginBtn = document.getElementById("loginBtn");
 
+  /* API URL (works locally and on Render) */
+  const API =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5000"
+      : "https://quiz-portal-ma1m.onrender.com";
+
+
+  /* ROLE SELECTION */
   roleButtons.forEach(btn => {
     btn.addEventListener("click", () => {
+
       selectedRole = btn.id.split("-")[1];
 
       roleButtons.forEach(b =>
@@ -124,9 +133,12 @@
         idLabel.textContent = "Roll Number";
         loginId.placeholder = "Enter Roll Number";
       }
+
     });
   });
 
+
+  /* LOGIN BUTTON */
   loginBtn.addEventListener("click", async () => {
 
     const username = loginId.value.trim();
@@ -138,13 +150,14 @@
     }
 
     const isStudent = selectedRole === "student";
-    const API = window.location.origin;
 
     try {
 
       const res = await fetch(`${API}/api/auth/${selectedRole}/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(
           isStudent
             ? { rollNo: username, password: pass }
@@ -159,17 +172,22 @@
         return;
       }
 
+      /* Save login session */
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("role", data.role);
 
-      window.location.href =
-        data.role === "student"
-          ? "student_dashboard.html"
-          : "teacher_dashboard.html";
+      /* Redirect */
+      if (data.role === "student") {
+        window.location.href = "student_dashboard.html";
+      } else {
+        window.location.href = "teacher_dashboard.html";
+      }
 
     } catch (err) {
-      alert("Server not reachable");
+
       console.error(err);
+      alert("Server not reachable");
+
     }
 
   });
