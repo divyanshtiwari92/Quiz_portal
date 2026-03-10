@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+
+<!-- Navbar -->
+<nav class="  flex justify-between px-9 py-4">
+  <h1 class="text-xl font-bold text-indigo-600">📘 ExamPortal</h1>
+  <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded">
+    Logout
+  </button>
+</nav>
+
+<!-- Welcome -->
+<div class="px-8 mt-6">
+  <h2 class="text-2xl font-semibold">
+    Welcome back,
+    <span id="studentName" class="text-blue-600"></span> 
+  </h2>
+</div>
+
+<div class="grid md:grid-cols-3 gap-6 px-8 mt-6">
+
+  <!-- Profile -->
+  <div class="bg-white p-6 rounded shadow">
+    <h3 id="profileName" class="font-semibold text-lg"></h3>
+    <p id="rollNo" class="text-indigo-500"></p>
+    <p><b>Section:</b> <span id="section"></span></p>
+  </div>
+
+  <!-- Available Exams (Static) -->
+  <div class="md:col-span-2 bg-white p-6 rounded shadow">
+    <h3 class="font-semibold mb-4">📝 Available Exams</h3>
+    <p class="text-gray-500 text-sm">No exams available.</p>
+  </div>
+</div>
+
+<!-- Results (Static) -->
+<div class="px-8 mt-8">
+  <div class="bg-white p-6 rounded shadow">
+    <h3 class="font-semibold mb-4">🏆 Results</h3>
+    <p class="text-gray-500 text-sm">No exams attempted yet.</p>
+  </div>
+</div>
+
+<script>
+/* ================= AUTH ================= */
+const user = JSON.parse(localStorage.getItem("user"));
+const role = localStorage.getItem("role");
+
+if (!user || role !== "student") {
+  window.location.href = "index.html";
+}
+
+/* ================= PROFILE ONLY ================= */
+document.getElementById("studentName").textContent = user.name;
+document.getElementById("profileName").textContent = user.name;
+document.getElementById("rollNo").textContent = user.rollNo;
+document.getElementById("section").textContent = user.section;
+
+/* ================= LOGOUT ================= */
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.clear();
+  window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>

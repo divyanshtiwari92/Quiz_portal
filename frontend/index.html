@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuizPortal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+
+<div class="w-full max-w-md">
+
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl
+                bg-gradient-to-br from-blue-500 to-red-600 shadow-lg text-white text-3xl">
+      📘
+    </div>
+    <h1 class="text-3xl font-bold text-slate-800">QuizPortal</h1>
+    <p class="text-slate-500">SKIT Jaipur</p>
+  </div>
+
+  <!-- Card -->
+  <div class="rounded-3xl bg-white p-8 shadow-xl">
+
+    <h2 class="mb-6 text-center text-xl font-semibold text-slate-800">
+      Sign In to Continue
+    </h2>
+
+    <div class="space-y-4">
+
+      <!-- ID -->
+      <div>
+        <label id="idLabel" class="mb-2 block text-sm font-medium text-slate-600">
+          Roll Number
+        </label>
+        <input
+          id="loginId"
+          required
+          placeholder="Enter Roll Number"
+          class="w-full rounded-xl border border-slate-200 px-4 py-3
+                 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100">
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-600">
+          Password
+        </label>
+        <input
+          id="password"
+          type="password"
+          required
+          minlength="4"
+          placeholder="Enter your password"
+          class="w-full rounded-xl border border-slate-200 px-4 py-3
+                 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100">
+      </div>
+
+      <!-- Role -->
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-600">
+          Login As
+        </label>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button type="button" id="role-student"
+            class="role-btn rounded-xl border-2 border-blue-500 bg-blue-50 px-4 py-3 font-medium text-blue-600">
+            👨‍🎓 Student
+          </button>
+
+          <button type="button" id="role-teacher"
+            class="role-btn rounded-xl border-2 border-blue-500 bg-blue-50 px-4 py-3 font-medium text-slate-600">
+            👩‍🏫 Teacher
+          </button>
+        </div>
+
+        <p class="mt-2 text-xs text-slate-400 text-center">
+          Please select a role before signing in
+        </p>
+      </div>
+
+      <!-- Submit -->
+      <button id="loginBtn"
+        class="mt-4 w-full rounded-xl bg-green-800 py-3.5 font-semibold text-white hover:bg-green-700">
+        Sign In
+      </button>
+
+    </div>
+
+    <p class="mt-6 text-center text-sm text-slate-400">
+      Quiz Portal • Academic Project
+    </p>
+
+  </div>
+</div>
+
+<script>
+(() => {
+
+  let selectedRole = "student";
+
+  const idLabel = document.getElementById("idLabel");
+  const loginId = document.getElementById("loginId");
+  const password = document.getElementById("password");
+  const roleButtons = document.querySelectorAll(".role-btn");
+  const loginBtn = document.getElementById("loginBtn");
+
+  // Role Selection
+  roleButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedRole = btn.id.split("-")[1];
+
+      roleButtons.forEach(b =>
+        b.classList.remove("border-green-500","bg-blue-50","text-blue-600")
+        
+      );
+
+      btn.classList.add("border-green-500","bg-blue-50","text-blue-600");
+
+      if (selectedRole === "teacher") {
+        idLabel.textContent = "Employee ID";
+        loginId.placeholder = "Enter Employee ID";
+      } else {
+        idLabel.textContent = "Roll Number";
+        loginId.placeholder = "Enter Roll Number";
+      }
+    }
+    );
+  });
+
+
+  // Login
+  loginBtn.addEventListener("click", async () => {
+
+    const username = loginId.value.trim();
+    const pass = password.value.trim();
+
+    if (!username || !pass) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const isStudent = selectedRole === "student";
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/auth/${selectedRole}/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(
+            isStudent
+              ? { rollNo: username, password: pass }
+              : { employeeId: username, password: pass }
+          )
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Login failed");
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("role", data.role);
+
+      window.location.href =
+        data.role === "student"
+          ? "student_dashboard.html"
+          : "teacher_dashboard.html";
+
+    } catch (err) {
+      alert("Server not reachable");
+      console.error(err);
+    }
+
+  });
+
+})();
+</script>
+
+</body>
+</html>
