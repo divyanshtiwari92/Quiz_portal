@@ -143,10 +143,11 @@
     }
 
     const isStudent = selectedRole === "student";
-
+ const API = window.location.origin;
     try {
       const res = await fetch(
-        `http://localhost:5000/api/auth/${selectedRole}/login`,
+       
+       fetch(`${API}/api/auth/${selectedRole}/login`),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
