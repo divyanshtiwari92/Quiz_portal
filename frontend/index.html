@@ -107,21 +107,14 @@
   const roleButtons = document.querySelectorAll(".role-btn");
   const loginBtn = document.getElementById("loginBtn");
 
-  /* API URL (works locally and on Render) */
-  const API =
-    window.location.hostname === "localhost"
-      ? "http://localhost:5000"
-      : "https://quiz-portal-ma1m.onrender.com";
-
-
-  /* ROLE SELECTION */
+  // Role Selection
   roleButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-
       selectedRole = btn.id.split("-")[1];
 
       roleButtons.forEach(b =>
         b.classList.remove("border-green-500","bg-blue-50","text-blue-600")
+        
       );
 
       btn.classList.add("border-green-500","bg-blue-50","text-blue-600");
@@ -133,12 +126,12 @@
         idLabel.textContent = "Roll Number";
         loginId.placeholder = "Enter Roll Number";
       }
-
-    });
+    }
+    );
   });
 
 
-  /* LOGIN BUTTON */
+  // Login
   loginBtn.addEventListener("click", async () => {
 
     const username = loginId.value.trim();
@@ -152,18 +145,18 @@
     const isStudent = selectedRole === "student";
 
     try {
-
-      const res = await fetch(`${API}/api/auth/${selectedRole}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(
-          isStudent
-            ? { rollNo: username, password: pass }
-            : { employeeId: username, password: pass }
-        )
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/auth/${selectedRole}/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(
+            isStudent
+              ? { rollNo: username, password: pass }
+              : { employeeId: username, password: pass }
+          )
+        }
+      );
 
       const data = await res.json();
 
@@ -172,22 +165,17 @@
         return;
       }
 
-      /* Save login session */
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("role", data.role);
 
-      /* Redirect */
-      if (data.role === "student") {
-        window.location.href = "student_dashboard.html";
-      } else {
-        window.location.href = "teacher_dashboard.html";
-      }
+      window.location.href =
+        data.role === "student"
+          ? "student_dashboard.html"
+          : "teacher_dashboard.html";
 
     } catch (err) {
-
-      console.error(err);
       alert("Server not reachable");
-
+      console.error(err);
     }
 
   });
