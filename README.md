@@ -234,7 +234,7 @@ git push origin feature/AmazingFeature
 
 | 👤 **Divyansh Tiwari** | 👤 **Ankit Jatwa** |
 |:---:|:---:|
-| [![GitHub](https://img.shields.io/badge/GitHub-divyanshtiwari92-181717?style=for-the-badge&logo=github)](https://github.com/divyanshtiwari92) | [![GitHub](https://img.shields.io/badge/GitHub-AnkitJatwa-181717?style=for-the-badge&logo=github)](https://github.com/AnkitJatwa) |
+| [![GitHub](https://img.shields.io/badge/GitHub-divyanshtiwari92-181717?style=for-the-badge&logo=github)](https://github.com/divyanshtiwari92) | [![GitHub](https://img.shields.io/badge/GitHub-AnkitJatwa-181717?style=for-the-badge&logo=github)]([https://github.com/ankitjatwaankitjatwa4-a11y]) |
 
 </div>
 
